@@ -28,4 +28,4 @@ English / తెలుగు toggle: switches the speech recognizer (en-IN / te-
    (optional: `GROQ_MODEL`, `SARVAM_MODEL`, `SARVAM_SPEAKER`).
 4. Deploy.
 
-Best experience: Chrome or Edge (voice input). Other browsers can use the text box.
+ or Edge (voice input). Other browsers can use the text box.
