@@ -12,8 +12,13 @@
     <header class="intro">
       <div class="avatar" aria-hidden="true">P</div>
       <h1>Talk to Prabhas</h1>
-      <p>An AI voice version of me. Ask me anything you'd ask in an interview, and I'll answer the way I would.</p>
+      <p>An AI voice version of me. Ask me anything, in English or Telugu, and I'll answer the way I would. Sarcasm included, free of charge.</p>
     </header>
+
+    <div class="lang" role="group" aria-label="Reply language">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="te" aria-pressed="false" lang="te">తెలుగు</button>
+    </div>
 
     <section class="talk">
       <button id="micBtn" class="mic" type="button" aria-label="Tap to speak">
@@ -34,6 +39,7 @@
         <button type="button" class="chip">What are the top 3 areas you'd like to grow in?</button>
         <button type="button" class="chip">What misconception do your coworkers have about you?</button>
         <button type="button" class="chip">How do you push your boundaries and limits?</button>
+        <button type="button" class="chip">Which Telugu movie meme describes your life right now?</button>
       </div>
     </section>
 
@@ -44,8 +50,9 @@
       <button type="submit">Ask</button>
     </form>
 
-    <footer class="foot">Answers are AI-generated from Prabhas's own notes. Your voice is processed by your browser.</footer>
+    <footer class="foot">Answers are AI-generated from Prabhas's own notes. Your voice is transcribed by your browser; replies are voiced by Sarvam AI.</footer>
   </main>
+  <audio id="player" preload="none" hidden></audio>
   <script src="app.js"></script>
 </body>
 </html>

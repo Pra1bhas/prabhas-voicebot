@@ -1,28 +1,18 @@
 // Vercel serverless function: POST /api/chat
-// The browser sends { message, history }. This function adds the persona,
+// The browser sends { message, history, lang }. This function adds the persona,
 // calls Groq with the SECRET key (from an env var), and returns { reply }.
 // The key never leaves the server.
 
-import { SYSTEM_PROMPT } from "../lib/persona.js";
+import { buildSystemPrompt } from "../lib/persona.js";
+import { createRateLimiter, clientIp } from "../lib/ratelimit.js";
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 
 const MAX_MESSAGE_CHARS = 500;   // one spoken question is never this long
 const MAX_HISTORY_TURNS = 10;    // keep context (and cost) small
-const RATE_LIMIT = 15;           // requests...
-const RATE_WINDOW_MS = 60_000;   // ...per minute, per IP
-
-// Best-effort rate limiter. Serverless instances are short-lived and can run
-// in parallel, so this is a speed bump, not a wall. (A real one uses Redis/KV.)
-const hits = new Map();
-function isRateLimited(ip) {
-  const now = Date.now();
-  const recent = (hits.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > RATE_LIMIT;
-}
+const LANGS = ["en", "te"];
+const isRateLimited = createRateLimiter(15, 60_000); // 15 requests per minute per IP
 
 // Never trust what the browser sends: keep only well-formed user/assistant turns.
 function cleanHistory(history) {
@@ -51,12 +41,12 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "The bot isn't configured yet. Please try again later." });
   }
 
-  const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "unknown";
-  if (isRateLimited(ip)) {
+  if (isRateLimited(clientIp(req))) {
     return res.status(429).json({ error: "You're asking a lot quickly! Please wait a moment and try again." });
   }
 
-  const { message, history } = req.body || {};
+  const { message, history, lang: rawLang } = req.body || {};
+  const lang = LANGS.includes(rawLang) ? rawLang : "en";
   if (typeof message !== "string" || !message.trim()) {
     return res.status(400).json({ error: "Please ask a question." });
   }
@@ -65,7 +55,7 @@ export default async function handler(req, res) {
   }
 
   const messages = [
-    { role: "system", content: SYSTEM_PROMPT },
+    { role: "system", content: buildSystemPrompt(lang) },
     ...cleanHistory(history),
     { role: "user", content: message.trim() },
   ];
