@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Talk to Prabhas</title>
+  <meta name="description" content="A voice bot that answers interview questions the way Prabhas would." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="intro">
+      <div class="avatar" aria-hidden="true">P</div>
+      <h1>Talk to Prabhas</h1>
+      <p>An AI voice version of me. Ask me anything you'd ask in an interview, and I'll answer the way I would.</p>
+    </header>
+
+    <section class="talk">
+      <button id="micBtn" class="mic" type="button" aria-label="Tap to speak">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+      </button>
+      <p id="status" class="status" role="status" aria-live="polite">Tap the mic and ask a question</p>
+      <button id="stopBtn" class="stop" type="button" hidden>Stop speaking</button>
+      <p id="micNote" class="note" hidden>
+        Voice input isn't supported in this browser. Type your question below, or open this page in Chrome or Edge to speak.
+      </p>
+    </section>
+
+    <section class="samples" aria-label="Sample questions">
+      <p class="label">Or tap a question:</p>
+      <div class="chips">
+        <button type="button" class="chip">What should we know about your life story in a few sentences?</button>
+        <button type="button" class="chip">What's your #1 superpower?</button>
+        <button type="button" class="chip">What are the top 3 areas you'd like to grow in?</button>
+        <button type="button" class="chip">What misconception do your coworkers have about you?</button>
+        <button type="button" class="chip">How do you push your boundaries and limits?</button>
+      </div>
+    </section>
+
+    <section id="chat" class="chat" aria-live="polite" aria-label="Conversation"></section>
+
+    <form id="textForm" class="text-form">
+      <input id="textInput" type="text" maxlength="500" placeholder="Type a question..." aria-label="Type a question" autocomplete="off" />
+      <button type="submit">Ask</button>
+    </form>
+
+    <footer class="foot">Answers are AI-generated from Prabhas's own notes. Your voice is processed by your browser.</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
